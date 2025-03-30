@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-vdi-manager
+  labels:
+    app: vdi-manager
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: vdi-manager
+  template:
+    metadata:
+      labels:
+        app: vdi-manager
+    spec:
+      containers:
+      - name: vdi-manager
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 5000
+        resources:
+          {{ toYaml .Values.resources | nindent 12 }}

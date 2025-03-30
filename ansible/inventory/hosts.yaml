@@ -1,0 +1,12 @@
+all:
+  children:
+    vdi_desktops:
+      hosts:
+        # Placeholder: IPs or names of vdi-desktop pods
+        vdi-desktop-pod-1:
+          ansible_host: 10.0.1.10
+        vdi-desktop-pod-2:
+          ansible_host: 10.0.1.11
+  vars:
+    ansible_user: root
+    ansible_connection: ssh  # Or 'kubectl exec' for K8s

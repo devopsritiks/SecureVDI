@@ -1,0 +1,23 @@
+{
+  "title": "EKS Cluster Health",
+  "panels": [
+    {
+      "title": "Node Count",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "count(kube_node_info)"
+        }
+      ]
+    },
+    {
+      "title": "Pod Status",
+      "type": "table",
+      "targets": [
+        {
+          "expr": "kube_pod_status_phase{namespace=\"vdi-platform\"}"
+        }
+      ]
+    }
+  ]
+}

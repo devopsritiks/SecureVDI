@@ -1,0 +1,5 @@
+- name: Configure VDI Desktop Pods
+  hosts: vdi_desktops
+  become: yes  # Run as root
+  roles:
+    - vdi-desktop

@@ -1,0 +1,24 @@
+{
+  "title": "VDI Performance",
+  "panels": [
+    {
+      "title": "CPU Usage",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{namespace=\"vdi-platform\"}[5m])",
+          "legendFormat": "{{ pod }}"
+        }
+      ]
+    },
+    {
+      "title": "Active Sessions",
+      "type": "gauge",
+      "targets": [
+        {
+          "expr": "count(kube_pod_info{namespace=\"vdi-platform\", pod=~\"vdi-desktop.*\"})"
+        }
+      ]
+    }
+  ]
+}

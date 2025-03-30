@@ -1,0 +1,2 @@
+vnc_password: "password"  # Hardcoded for demo; use vault in production
+vnc_port: 5901

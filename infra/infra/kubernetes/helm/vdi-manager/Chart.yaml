@@ -1,0 +1,5 @@
+apiVersion: v2
+name: vdi-manager
+description: Helm chart for VDI Manager service
+version: 0.1.0
+appVersion: "1.0"

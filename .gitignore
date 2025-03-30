@@ -1,0 +1,21 @@
+# General
+*.log
+__pycache__
+*.pyc
+*.swp
+
+# Terraform
+terraform.tfstate
+terraform.tfstate.backup
+terraform.tfvars
+.tfstate
+kubeconfig
+
+# Docker
+Dockerfile.local
+
+# Ansible
+ansible/inventory/dynamic/
+
+# Jenkins
+ci/kubeconfig

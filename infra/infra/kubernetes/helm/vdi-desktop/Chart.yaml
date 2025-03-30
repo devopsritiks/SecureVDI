@@ -1,0 +1,5 @@
+apiVersion: v2
+name: vdi-desktop
+description: Helm chart for VDI Desktop containers
+version: 0.1.0
+appVersion: "1.0"

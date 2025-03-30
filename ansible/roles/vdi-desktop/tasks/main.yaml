@@ -1,0 +1,25 @@
+- name: Ensure VNC server is installed
+  apt:
+    name: tightvncserver
+    state: present
+    update_cache: yes
+
+- name: Create VNC password file
+  copy:
+    content: "{{ vnc_password }}"
+    dest: /root/.vnc/passwd
+    mode: '0600'
+    owner: root
+    group: root
+
+- name: Ensure XFCE is installed
+  apt:
+    name:
+      - xfce4
+      - xfce4-goodies
+    state: present
+
+- name: Start VNC server
+  command: tightvncserver :1 -geometry 1280x720 -depth 24
+  args:
+    creates: /root/.vnc/*.pid  # Ensures idempotency

@@ -1,0 +1,11 @@
+groups:
+- name: vdi-alerts
+  rules:
+  - alert: HighCPUUsage
+    expr: rate(container_cpu_usage_seconds_total{namespace="vdi-platform"}[5m]) > 0.7
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High CPU usage detected in VDI platform"
+      description: "CPU usage for {{ $labels.pod }} exceeds 70% for 5 minutes."

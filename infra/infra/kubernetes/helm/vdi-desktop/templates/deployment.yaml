@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-vdi-desktop
+  labels:
+    app: vdi-desktop
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: vdi-desktop
+  template:
+    metadata:
+      labels:
+        app: vdi-desktop
+    spec:
+      containers:
+      - name: vdi-desktop
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 5901
+        resources:
+          {{ toYaml .Values.resources | nindent 12 }}

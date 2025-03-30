@@ -1,0 +1,63 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_REGISTRY = 'myrepo'  // Replace with your Docker Hub/ECR repo
+    }
+    stages {
+        stage('Setup Infrastructure') {
+            steps {
+                dir('infra/terraform') {
+                    sh 'terraform init'
+                    sh 'terraform apply -auto-approve'
+                    sh 'terraform output -raw kubeconfig > ../kubeconfig'
+                }
+            }
+        }
+        stage('Build Docker Images') {
+            steps {
+                dir('ci/scripts') {
+                    sh './build.sh'
+                }
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                dir('ci/scripts') {
+                    sh './test.sh'
+                }
+            }
+        }
+        stage('Deploy to EKS') {
+            steps {
+                withCredentials([file(credentialsId: 'eks-kubeconfig', variable: 'KUBECONFIG')]) {
+                    dir('ci/scripts') {
+                        sh './deploy.sh'
+                    }
+                }
+            }
+        }
+        stage('Configure VDI') {
+            steps {
+                dir('ansible') {
+                    sh 'ansible-playbook -i inventory/hosts.yml playbooks/configure-vdi.yml'
+                }
+            }
+        }
+        stage('Setup Monitoring') {
+            steps {
+                withCredentials([file(credentialsId: 'eks-kubeconfig', variable: 'KUBECONFIG')]) {
+                    dir('monitoring') {
+                        sh 'helm repo add prometheus-community https://prometheus-community.github.io/helm-charts'
+                        sh 'helm repo update'
+                        sh 'helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace vdi-platform --create-namespace --kubeconfig=$KUBECONFIG --set prometheus.prometheusSpec.additionalScrapeConfigs="$(cat prometheus/prometheus.yml)"'
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()  // Clean workspace after run
+        }
+    }
+}
